@@ -1,0 +1,88 @@
+'''
+"mini-ls"
+-----------
+
+Usage
+
+    ./mini-ls [-r] [FILE...]
+
+`mini-ls` lists information about the paths given in FILE. The
+information required are: Owner, Permission, Modified Time.
+
+- FILE can be zero or more arguments. If zero args are given,
+  `mini-ls` will list information about the current directory.
+- If given, the `-r` option will make `mini-ls` run recursively on any
+  directory it comes across.
+  
+Command to run : 
+1.     ./mini-ls -r
+2.     ./mini-ls
+3.     ./mini-ls -r file1
+4.     ./mini-ls -r file1 file2
+5.     ./mini-ls file1 file2  
+  
+'''
+#!/usr/bin/env python3
+import sys, os
+
+def main():
+    n=0
+    recursive=False
+    #If -r is given will print recursively
+    if len(sys.argv) > 1:
+        if sys.argv[n+1] =='-r':
+            #if r is given will increase n by 1 and make it True
+            n+=1
+            recursive=True
+    filelist = []
+    #If no files are given o/p will be from current dir
+    if len(sys.argv) == n+1:
+        #Assigning the path as current dir
+        path='.'
+        if recursive:
+            for root, dirs, files in os.walk(path):
+                for file in files:
+                    #append the file name to the list
+                        filelist.append(os.path.join(root,file))
+        #Else will list out the files from current path
+        else:
+            for files in os.listdir(path):
+                #just appending the path with files
+                filelist.append(os.path.abspath(os.path.join(path,files)))
+    #If files are there o/p will be from files
+    else:
+        for filepath in sys.argv[n+1:]:
+            #Opening the file one by one
+            try:
+                #If recursive is enabled will use walk
+                if recursive:
+                    #If filepath is not file will use dir
+                    if not os.path.isfile(filepath):
+                        for root, dirs, files in os.walk(filepath):
+                            for file in files:
+                                #append the file name to the list
+                                filelist.append(os.path.join(root,file))
+                    else:
+                            #just appending the path with files
+                            filelist.append(filepath)
+                #Else will list out the files from current path
+                else:
+                    if not os.path.isfile(filepath):
+                        for files in os.listdir(filepath):
+                            #just appending the path with files
+                            filelist.append(os.path.abspath(os.path.join(filepath,files)))
+                    else:
+                            #just appending the path with files
+                            filelist.append(filepath)
+            except:
+                #raising exception if files are not present
+                print (f"{filepath} File are not present")
+    #print all the file names
+    for name in filelist:
+        #getitng extra info of all files
+        print(os.system(f"ls -l {name}"))
+
+if __name__ == "__main__":
+    main()
+
+

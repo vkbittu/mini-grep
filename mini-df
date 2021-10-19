@@ -1,0 +1,60 @@
+'''
+"mini-df"
+---------
+
+Usage:
+
+    ./mini-df [-h] [PATH...]
+
+`mini-df` outputs the file system disk space usage of each entry in
+PATH. The information required is: Total Space, Free Space, Used
+Space. The result should be in Bytes.
+
+- PATH can be zero or more arguments. IF zero args are given,
+  `mini-df` will list the disk space usage of the current directory.
+- If given `-h` will output the result in human-readable format.
+-------
+
+Command to run : 
+1.     ./mini-df -h
+2.     ./mini-df
+3.     ./mini-df -h path1
+4.     ./mini-df -h path1 path2
+5.     ./mini-df path1 path2
+'''
+#!/usr/bin/env python3
+import sys, os
+
+def main():
+    n=0
+    human_read=False
+    # If -h is given will result will be in human-readable format
+    if len(sys.argv) > 1:
+        if sys.argv[n+1] =='-h':
+            # if h is given will increase n by 1 and make it True
+            n+=1
+            human_read=True
+    # If no files are given o/p will be from current dir
+    if len(sys.argv) == n+1:
+        if human_read:
+            # print the file system disk space usage with h option
+            print(os.system("df -h"))
+        else:
+            # print the file system disk space usage
+            print(os.system("df"))
+    # If paths are there o/p will be from path
+    else:
+        for path in sys.argv[n+1:]:
+            try:
+                if human_read:
+                    # print the file system disk space usage with h option
+                    print(os.system(f"df -h {path}"))
+                else:
+                    # print the file system disk space usage
+                    print(os.system(f"df {path}"))
+            except:
+                # raising exception if path is not present
+                print ("File does not exist")
+
+if __name__ == "__main__":
+    main()

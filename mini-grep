@@ -1,0 +1,79 @@
+'''
+"mini-grep"
+-----------
+
+Usage:
+
+    ./mini-grep [-q] -e PATTERN [FILE...]
+
+`mini-grep` goes through every argument in FILE and prints the whole
+line in which PATTERN is found. By default `mini-grep` also outputs
+the line number of each printed line.
+
+- PATTERN has to be a valid regex
+- FILE can be zero or more arguments. If zero args are given,
+  `mini-grep` will parse entries from the standa`rd input.
+- If given, the `-q` options only outputs lines but omits the matching
+  line numbers.
+  
+Command to run : 
+1.     ./mini-grep -e pattern
+2.     ./mini-grep -q -e pattern file1
+3.     ./mini-grep -e pattern file1 file2
+4.     ./mini-grep -q -e pattern file1 file2
+5.     ./mini-grep -q -e pattern  
+
+'''
+#!/usr/bin/env python3
+import sys, re
+
+def main():
+    try:
+        n=1
+        q_option=False
+        # If -q is given will not print line number
+        if sys.argv[n] =='-q':
+            # if q is given will increase n by 1 and make it True
+            n+=1
+            q_option=True
+        # If total args less then 2(except q) raising the exception
+        if len(sys.argv) > n+1:
+            # Get the pattern from command line
+            pattern = re.compile(sys.argv[n+1])
+            # If no files are given user will take the input as a string
+            if len(sys.argv) == n+2:
+                # taking the input
+                input_string=input("enter the string\n")
+                # Searching the pattern in line
+                if re.search(pattern, input_string):
+                    #Printing the filename, line
+                    print (f'Pattern Found: {input_string}')
+            else:
+                # Reading files one by one
+                for file in sys.argv[n+2:]:
+                    # Opening the file one by one
+                    try:
+                        with open(file) as f1:
+                            # Reading the file and using enumerate to get the line number
+                            for line_no,line in enumerate(f1.readlines()):
+                                # Searching the pattern in line
+                                if re.search(pattern, line):
+                                    # Printing the filename, line
+                                    print (f'{file}:{line}',end='',)
+                                    # Print line number of pattern match if q_option is False only
+                                    print (f'line number of above line is {line_no+1}') if not q_option else None
+                    except:
+                        # raisining exception if files are not present
+                        print (f"{file} File are not present")
+        else :
+                raise
+    except:
+        print("Oops! Arguments are not given properly...please try again")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
